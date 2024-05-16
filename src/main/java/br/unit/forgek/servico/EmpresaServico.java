@@ -1,7 +1,6 @@
 package br.unit.forgek.servico;
 import br.unit.forgek.modelo.Empresa;
 import br.unit.forgek.repositorio.EmpresaRepositorio;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,11 +9,15 @@ import java.util.Optional;
 @Service
 public class EmpresaServico {
 
-    @Autowired
-    private EmpresaRepositorio empresaRepositorio;
+    private final EmpresaRepositorio empresaRepositorio;
+
+    public EmpresaServico(EmpresaRepositorio empresaRepositorio) {
+        this.empresaRepositorio = empresaRepositorio;
+    }
 
     public Empresa criarEmpresa(Empresa empresa) {
-        return empresaRepositorio.save(empresa);
+        empresaRepositorio.save(empresa);
+        return empresa;
     }
 
     public List<Empresa> listarTodas() {

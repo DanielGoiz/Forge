@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Empresas</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <style>
+        /* Estilo personalizado para o fundo e transparência */
+        body, html {
+            height: 100%;
+            margin: 0;
+        }
+        .background {
+            background-image:url("../lala.png"); /* Ajuste o caminho conforme necessário */
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.8); /* Adiciona transparência ao fundo do container */
+            border-radius: 10px; /* Bordas arredondadas */
+            padding: 20px;
+            margin-top: 50px; /* Ajuste conforme necessário */
+        }
+    </style>
+</head>
+<body>
+<div class="background">
+    <div class="container mt-5">
+        <h2>Empresas Cadastradas</h2>
+        <table class="table table-bordered table-hover">
+            <thead class="thead-dark">
+            <tr>
+                <th>Nome</th>
+                <th>CNPJ</th>
+                <th>Email</th>
+                <th>Endereço</th> <!-- Cabeçalho para o campo endereço -->
+                <th>Ações</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="empresa : ${empresas}">
+                <td th:text="${empresa.nome}"></td>
+                <td th:text="${empresa.cnpj}"></td>
+                <td th:text="${empresa.email}"></td>
+                <td th:text="${empresa.endereco}"></td> <!-- Campo endereço para cada empresa -->
+                <td>
+                    <a th:href="@{/empresas/delete/{id}(id=${empresa.id})}" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja apagar esta empresa?');">
+                        <i class="fas fa-trash-alt"></i>
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        fetch('http://localhost:8085/empresas/lista-empresas')
+            .then(response => response.json())
+            .then(empresas => {
+                // Aqui você pode processar a lista de empresas e atualizar o DOM conforme necessário
+                console.log(empresas); // Exemplo: Logar as empresas no console
+                // Você precisará escrever o código para adicionar essas empresas à tabela na sua página
+            })
+            .catch(error => console.error('Erro ao buscar empresas:', error));
+    });
+</script>
+
+</body>
+</html>

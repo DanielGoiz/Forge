@@ -3,15 +3,13 @@ import br.unit.forgek.modelo.Empresa;
 import br.unit.forgek.servico.EmpresaServico;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
 import java.util.List;
+import org.springframework.ui.Model;
 
 @RestController
 @RequestMapping("/empresas") // Define a base path para todos os métodos deste controlador
-@Controller
 public class EmpresaControle {
 
     private final EmpresaServico empresaServico;
@@ -21,7 +19,7 @@ public class EmpresaControle {
     }
 
     @PostMapping // Mapeia requisições POST para /empresas
-    public ResponseEntity<Empresa> criarEmpresa(@RequestBody Empresa empresa) {
+    public ResponseEntity<Empresa> criarEmpresa(@ModelAttribute Empresa empresa) {
         Empresa novaEmpresa = empresaServico.criarEmpresa(empresa);
         return ResponseEntity.status(HttpStatus.CREATED).body(novaEmpresa); // Retorna a empresa criada com status 201 Created
     }
@@ -49,5 +47,12 @@ public class EmpresaControle {
     public ResponseEntity<Void> deletarEmpresa(@PathVariable Long id) {
         empresaServico.deletarEmpresa(id);
         return ResponseEntity.noContent().build(); // Retorna status 204 No Content
+    }
+
+    @GetMapping("/lista-empresas")
+    public String listaEmpresas(Model model) {
+        List<Empresa> empresas = empresaServico.listarTodas();
+        model.addAttribute("empresas", empresas);
+        return "Gerenciar"; // Substitua "nomeDaSuaView" pelo nome real da sua view
     }
 }

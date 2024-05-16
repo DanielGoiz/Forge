@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Empresa</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+        }
+        .bg-image {
+            background-image: url("../lala.png");
+            background-size: cover;
+            background-position: center;
+        }
+        .form-container {
+            background-color: rgba(255, 255, 255, 0.2); /* Transparência aumentada */
+            border-radius: 10px;
+            padding: 40px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Sombra mais definida */
+        }
+        /* Animação de foco nos campos do formulário */
+        .form-control:focus {
+            border-color: #007bff;
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(0, 123, 255, 0.6);
+        }
+        .btn-primary {
+            background-color: #0d2c5b;
+            border-color: #0d2c5b;
+        }
+        .btn-primary:hover {
+            background-color: #09223b;
+            border-color: #09223b;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        .form-container {
+            color: white;
+            font-weight: bold;
+        }
+
+        .form-control {
+            color: black;
+            font-weight: normal;
+        }
+    </style>
+</head>
+<body>
+
+<div class="bg-image d-flex justify-content-center align-items-center" style="height: 100vh;">
+    <div class="form-container">
+        <h2 class="text-center">Cadastro de Empresa</h2>
+        <form action="http://localhost:8085/empresas" method="post">
+            <div class="form-group">
+                <label for="nome">Nome:</label>
+                <input type="text" class="form-control" id="nome" name="nome" required>
+            </div>
+            <div class="form-group">
+                <label for="cnpj">CNPJ:</label>
+                <input type="text" class="form-control" id="cnpj" name="cnpj" required>
+            </div>
+            <div class="form-group">
+                <label for="endereco">Endereço:</label>
+                <input type="text" class="form-control" id="endereco" name="endereco" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Cadastrar</button>
+        </form>
+    </div>
+</div>
+
+<!-- jQuery and Bootstrap Bundle (includes Popper) -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+<script> document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    form.addEventListener('submit', function(event) {
+        const nome = document.getElementById('nome').value;
+        const cnpj = document.getElementById('cnpj').value;
+        const endereco = document.getElementById('endereco').value;
+        const email = document.getElementById('email').value;
+
+        // Validação do nome
+        if (!nome) {
+            alert('Por favor, preencha o nome da empresa.');
+            event.preventDefault();
+            return;
+        }
+
+        // Validação do CNPJ para conter apenas 14 números
+        if (!/^\d{14}$/.test(cnpj)) {
+            alert('O CNPJ deve conter exatamente 14 números, sem pontos, vírgulas ou barras.');
+            event.preventDefault();
+            return;
+        }
+
+        // Validação do endereço
+        if (!endereco) {
+            alert('Por favor, preencha o endereço da empresa.');
+            event.preventDefault();
+            return;
+        }
+
+        // Validação do email
+        if (!/^\S+@\S+\.\S+$/.test(email)) {
+            alert('Por favor, insira um endereço de email válido.');
+            event.preventDefault();
+
+        }
+
+        // Se todas as validações passarem, o formulário será enviado
+    });
+});</script>
+</body>
+</html>
