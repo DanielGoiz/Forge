@@ -9,7 +9,8 @@ import java.util.List;
 import org.springframework.ui.Model;
 
 @RestController
-@RequestMapping("/empresas") // Define a base path para todos os métodos deste controlador
+@RequestMapping("/empresas")
+@CrossOrigin(origins = "http://localhost:63342")
 public class EmpresaControle {
 
     private final EmpresaServico empresaServico;
@@ -18,12 +19,15 @@ public class EmpresaControle {
         this.empresaServico = empresaServico;
     }
 
-    @PostMapping // Mapeia requisições POST para /empresas
-    public ResponseEntity<Empresa> criarEmpresa(@ModelAttribute Empresa empresa) {
+    @PostMapping("/cadastrar-empresa")
+    public ResponseEntity<?> criarEmpresa(@RequestBody Empresa empresa) {
         Empresa novaEmpresa = empresaServico.criarEmpresa(empresa);
-        return ResponseEntity.status(HttpStatus.CREATED).body(novaEmpresa); // Retorna a empresa criada com status 201 Created
+        if (novaEmpresa != null) {
+            return new ResponseEntity<>(novaEmpresa, HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>("Erro ao criar a empresa", HttpStatus.BAD_REQUEST);
+        }
     }
-
     @GetMapping // Mapeia requisições GET para /empresas
     public ResponseEntity<List<Empresa>> listarTodasEmpresas() {
         List<Empresa> empresas = empresaServico.listarTodas();
@@ -53,6 +57,7 @@ public class EmpresaControle {
     public String listaEmpresas(Model model) {
         List<Empresa> empresas = empresaServico.listarTodas();
         model.addAttribute("empresas", empresas);
-        return "Gerenciar"; // Substitua "nomeDaSuaView" pelo nome real da sua view
+        return "Gerenciar.html";
     }
 }
+
