@@ -1,7 +1,8 @@
 package br.unit.forgek.servico;
 
-
+import br.unit.forgek.modelo.Empresa;
 import br.unit.forgek.modelo.Representante;
+import br.unit.forgek.repositorio.EmpresaRepositorio;
 import br.unit.forgek.repositorio.RepresentanteRepositorio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,11 +13,17 @@ import java.util.Optional;
 @Service
 public class RepresentanteServico {
 
-
     @Autowired
     private RepresentanteRepositorio representanteRepositorio;
 
-    public Representante criarRepresentante(Representante representante) {
+    @Autowired
+    private EmpresaRepositorio empresaRepositorio;
+
+
+    public Representante criarRepresentante(Representante representante, Long empresaId) {
+        Empresa empresa = empresaRepositorio.findById(empresaId)
+                .orElseThrow(() -> new RuntimeException("Empresa não encontrada para este id :: " + empresaId));
+        representante.setEmpresa(empresa);
         return representanteRepositorio.save(representante);
     }
 

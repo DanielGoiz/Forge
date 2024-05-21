@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-
+@CrossOrigin(origins = "http://localhost:63342")
 @RestController
 @RequestMapping("/representantes") // Define a base path para todos os métodos deste controlador
 @Controller
@@ -22,12 +22,10 @@ public class RepresentanteControle {
     public RepresentanteControle(RepresentanteServico representanteServico) {
         this.representanteServico = representanteServico;
     }
-
-    @PostMapping // Mapeia requisições POST para /empresas
-    public ResponseEntity<Representante> criarRepresentante(@RequestBody Representante representante) {
-
-        Representante novoRepresentante = representanteServico.criarRepresentante(representante);
-        return ResponseEntity.status(HttpStatus.CREATED).body(novoRepresentante); // Retorna a empresa criada com status 201 Created
+    @PostMapping("/representantes/{empresaId}")
+    public ResponseEntity<Representante> criarRepresentante(@PathVariable(value = "empresaId") Long empresaId, @RequestBody Representante representante) {
+        Representante novoRepresentante = representanteServico.criarRepresentante(representante, empresaId);
+        return new ResponseEntity<>(novoRepresentante, HttpStatus.CREATED);
     }
 
     @GetMapping // Mapeia requisições GET para /empresas
