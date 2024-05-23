@@ -1,13 +1,23 @@
 package br.unit.forgek.controle;
 
+
 import br.unit.forgek.dto.*;
+import br.unit.forgek.modelo.DesafiosEntity;
+import br.unit.forgek.modelo.Mentor;
+import br.unit.forgek.modelo.Empresa;
+import br.unit.forgek.repositorio.DesafiosRepository;
+import br.unit.forgek.servico.MentorServico;
+import br.unit.forgek.servico.EmpresaServico;
 import br.unit.forgek.servico.DesafiosService;
+import org.springframework.ui.Model;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
 
 import java.util.List;
+
 @CrossOrigin(origins = "http://localhost:63342")
 @RestController
 @RequestMapping("/desafios")
@@ -16,9 +26,32 @@ public class DesafiosController {
     @Autowired
     private DesafiosService desafiosService;
 
+    @Autowired
+    private MentorServico mentorServico;
+
+    @Autowired
+    private EmpresaServico empresaServico;
+
+    @Autowired
+    private DesafiosRepository desafiosRepository;
+
+    @GetMapping("/desafios")
+    public String mostrarDesafios(Model model) {
+        // Correção: Usar a instância injetada de DesafiosRepository para chamar findAll()
+        List<DesafiosEntity> desafios = desafiosRepository.findAll();
+        model.addAttribute("desafios", desafios);
+        return "GerenciarDesafio.html"; // Substitua pelo nome real da sua página HTML
+    }
+
     @PostMapping
-    public ResponseEntity<DesafioCompletoDTO> criarDesafio(@Valid @RequestBody DesafioCompletoDTO desafioCompleteDTO) {
-        return ResponseEntity.ok(desafiosService.criarDesafio(desafioCompleteDTO));
+    public ResponseEntity<DesafioCompletoDTO> criarDesafio(@Valid @RequestBody DesafioCompletoDTO desafioCompleteDTO, @RequestParam Long mentorId, @RequestParam Long empresaId) {
+        Mentor mentor = mentorServico.buscarPorId(mentorId)
+                .orElseThrow(() -> new RuntimeException("Mentor não encontrado para este id :: " + mentorId));
+
+        Empresa empresa = empresaServico.buscarPorId(empresaId)
+                .orElseThrow(() -> new RuntimeException("Empresa não encontrada para este id :: " + empresaId));
+
+        return ResponseEntity.ok(desafiosService.criarDesafio(desafioCompleteDTO, mentor, empresa));
     }
 
     @GetMapping

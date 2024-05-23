@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 public class DesafiosEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idDesafio;
 
     private String desafio;
@@ -17,6 +17,14 @@ public class DesafiosEntity {
     private String video;
     private String status;
     private String avaliacao;
+
+    @ManyToOne
+    @JoinColumn(name = "mentor_id")
+    private Mentor mentor;
+
+    @ManyToOne
+    @JoinColumn(name = "empresa_id")
+    private Empresa empresa;
 
     // Getters and setters
 
@@ -82,5 +90,21 @@ public class DesafiosEntity {
 
     public void setAvaliacao(String avaliacao) {
         this.avaliacao = avaliacao;
+    }
+
+    public Mentor getMentor() {
+        return mentor;
+    }
+
+    public void setMentor(Mentor mentor) {
+        this.mentor = mentor;
+    }
+
+    public Empresa getEmpresa() {
+        return empresa;
+    }
+
+    public void setEmpresa(Empresa empresa) {
+        this.empresa = empresa;
     }
 }
